@@ -27,15 +27,30 @@ const Board = () => {
     }
     setDeck(shuffleCards(array));
   }, []);
+
+  const [clicked, setClicked] = useState([]);
+
   return (
-    <div className={styles.outer}>
-      {deck &&
-        deck.map((cardValue, i) => {
-          const onClick = () => {
-            console.log(cardValue, "clicked");
-          };
-          return <Card value={cardValue} key={i} onClick={onClick} />;
-        })}
+    <div>
+      <div className={styles.outer}>
+        {deck &&
+          deck.map((cardValue, i) => {
+            return (
+              <Card
+                value={cardValue}
+                key={i}
+                setClicked={setClicked}
+                clicked={clicked}
+              />
+            );
+          })}
+      </div>
+      <div>
+        Clicked:{" "}
+        {clicked.map((x, i) => (
+          <span key={i}>{x} </span>
+        ))}
+      </div>
     </div>
   );
 };

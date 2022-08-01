@@ -5,7 +5,9 @@ function App() {
   return (
     <div className="App">
       <h1>Match Up</h1>
-      <Board />
+      <div className="inner">
+        <Board />
+      </div>
     </div>
   );
 }

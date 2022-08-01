@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Card from "../Card";
+import End from "../End";
 import styles from "./styles.module.scss";
 
 const Board = () => {
@@ -18,15 +19,18 @@ const Board = () => {
     }
     return arr;
   };
-
-  useEffect(() => {
+  const startGame = useCallback(() => {
     let array = [];
-    for (let i = 1; i <= 8; i++) {
+    for (let i = 1; i <= 18; i++) {
       array.push(i);
       array.push(i);
     }
     setDeck(shuffleCards(array));
   }, []);
+
+  useEffect(() => {
+    startGame();
+  }, [startGame]);
 
   const [clicked, setClicked] = useState([]);
 
@@ -48,35 +52,37 @@ const Board = () => {
   const gameOver = deck.length > 1 && deck.every((x) => x === "_");
   return (
     <div>
-      <div className={styles.outer}>
-        {gameOver ? (
-          <div> game over</div>
-        ) : (
-          deck.length > 1 &&
-          deck.map((cardValue, index) => {
-            // if index is in current, then the card is open
-            const onClick = () => {
-              setClicked((curr) => {
-                return [...curr, index];
-              });
-            };
-            const active = clicked.includes(index);
-            const matched = cardValue === "_";
-            return (
-              <div key={index}>
-                <Card
-                  index={index}
-                  value={cardValue}
-                  onClick={onClick}
-                  disabled={clicked.length === 2}
-                  active={active && !matched}
-                  matched={matched}
-                />
-              </div>
-            );
-          })
-        )}
-      </div>
+      {gameOver ? (
+        <div>
+          <End onClick={startGame} />
+        </div>
+      ) : (
+        <div className={styles.outer}>
+          {deck.length > 1 &&
+            deck.map((cardValue, index) => {
+              // if index is in current, then the card is open
+              const onClick = () => {
+                setClicked((curr) => {
+                  return [...curr, index];
+                });
+              };
+              const active = clicked.includes(index);
+              const matched = cardValue === "_";
+              return (
+                <div key={index}>
+                  <Card
+                    index={index}
+                    value={cardValue}
+                    onClick={onClick}
+                    disabled={clicked.length === 2}
+                    active={active && !matched}
+                    matched={matched}
+                  />
+                </div>
+              );
+            })}
+        </div>
+      )}
     </div>
   );
 };

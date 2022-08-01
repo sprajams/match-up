@@ -34,26 +34,22 @@ const Board = () => {
     if (clicked.length === 2) {
       const timer = setTimeout(() => {
         if (deck[clicked[0]] === deck[clicked[1]]) {
-          console.log("its a match, delete");
           deck[clicked[1]] = "_";
           deck[clicked[0]] = "_";
         }
         setClicked([]);
-        console.log("nope, try again");
       }, 1000);
       return () => {
         clearTimeout(timer);
       };
     }
   }, [clicked, deck]);
-  console.log(deck);
   return (
     <div>
       <div className={styles.outer}>
         {deck &&
           deck.map((cardValue, index) => {
             // if index is in current, then the card is open
-
             const onClick = () => {
               setClicked((curr) => {
                 return [...curr, index];
@@ -68,18 +64,13 @@ const Board = () => {
                   index={index}
                   value={cardValue}
                   onClick={onClick}
+                  disabled={clicked.length === 2}
                   active={active && !matched}
                   matched={matched}
                 />
               </div>
             );
           })}
-      </div>
-      <div>
-        Clicked:{" "}
-        {clicked.map((x, i) => (
-          <span key={i}>{x} </span>
-        ))}
       </div>
     </div>
   );

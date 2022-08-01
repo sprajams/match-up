@@ -2,17 +2,20 @@
 import clsx from "clsx";
 import styles from "./styles.module.scss";
 
-const Card = ({ value, onClick, active, matched }) => {
+const Card = ({ value, onClick, active, matched, disabled }) => {
   return (
-    <button className={styles.outer} onClick={onClick}>
+    <button className={styles.outer} onClick={onClick} disabled={disabled}>
       {matched ? (
-        <div></div>
-      ) : active ? (
-        <div className={clsx(active ? styles.frontOfCard : styles.hidden)}>
-          {value}
-        </div>
+        <div className={clsx(styles.matched, styles.card)}></div>
       ) : (
-        <div className={styles.backOfCard}></div>
+        <div
+          className={clsx(
+            styles.card,
+            active ? styles.frontOfCard : styles.backOfCard
+          )}
+        >
+          {active && value}
+        </div>
       )}
     </button>
   );

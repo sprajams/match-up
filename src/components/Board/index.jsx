@@ -30,18 +30,48 @@ const Board = () => {
 
   const [clicked, setClicked] = useState([]);
 
+  useEffect(() => {
+    if (clicked.length === 2) {
+      const timer = setTimeout(() => {
+        if (deck[clicked[0]] === deck[clicked[1]]) {
+          console.log("its a match, delete");
+          deck[clicked[1]] = "_";
+          deck[clicked[0]] = "_";
+        }
+        setClicked([]);
+        console.log("nope, try again");
+      }, 1000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [clicked, deck]);
+  console.log(deck);
   return (
     <div>
       <div className={styles.outer}>
         {deck &&
-          deck.map((cardValue, i) => {
+          deck.map((cardValue, index) => {
+            // if index is in current, then the card is open
+
+            const onClick = () => {
+              setClicked((curr) => {
+                return [...curr, index];
+              });
+            };
+
+            const active = clicked.includes(index);
+            const matched = cardValue === "_";
             return (
-              <Card
-                value={cardValue}
-                key={i}
-                setClicked={setClicked}
-                clicked={clicked}
-              />
+              <div key={index}>
+                <Card
+                  index={index}
+                  value={cardValue}
+                  onClick={onClick}
+                  active={active && !matched}
+                  matched={matched}
+                />
+              </div>
             );
           })}
       </div>

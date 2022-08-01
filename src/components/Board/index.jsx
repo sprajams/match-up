@@ -44,10 +44,15 @@ const Board = () => {
       };
     }
   }, [clicked, deck]);
+
+  const gameOver = deck.length > 1 && deck.every((x) => x === "_");
   return (
     <div>
       <div className={styles.outer}>
-        {deck &&
+        {gameOver ? (
+          <div> game over</div>
+        ) : (
+          deck.length > 1 &&
           deck.map((cardValue, index) => {
             // if index is in current, then the card is open
             const onClick = () => {
@@ -55,7 +60,6 @@ const Board = () => {
                 return [...curr, index];
               });
             };
-
             const active = clicked.includes(index);
             const matched = cardValue === "_";
             return (
@@ -70,7 +74,8 @@ const Board = () => {
                 />
               </div>
             );
-          })}
+          })
+        )}
       </div>
     </div>
   );

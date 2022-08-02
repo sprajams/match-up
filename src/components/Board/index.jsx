@@ -5,6 +5,7 @@ import styles from "./styles.module.scss";
 
 const Board = () => {
   const [deck, setDeck] = useState([]);
+  const [difficulty, setDifficulty] = useState(2);
 
   const shuffleCards = (arr) => {
     let l = arr.length;
@@ -21,12 +22,12 @@ const Board = () => {
   };
   const startGame = useCallback(() => {
     let array = [];
-    for (let i = 1; i <= 18; i++) {
+    for (let i = 1; i <= difficulty ** 2 / 2; i++) {
       array.push(i);
       array.push(i);
     }
     setDeck(shuffleCards(array));
-  }, []);
+  }, [difficulty]);
 
   useEffect(() => {
     startGame();
@@ -50,14 +51,25 @@ const Board = () => {
   }, [clicked, deck]);
 
   const gameOver = deck.length > 1 && deck.every((x) => x === "_");
+
+  const pickDifficulty = (e) => {
+    setDifficulty(e.target.value);
+  };
+
   return (
     <div>
       {gameOver ? (
         <div>
-          <End onClick={startGame} />
+          <End restart={startGame} pickDifficulty={pickDifficulty} />
         </div>
       ) : (
-        <div className={styles.outer}>
+        <div
+          className={styles.outer}
+          style={{
+            gridTemplateColumns: `repeat(${difficulty}, 75px)`,
+            gridAutoRows: `repeat(${difficulty}, 75px)`,
+          }}
+        >
           {deck.length > 1 &&
             deck.map((cardValue, index) => {
               // if index is in current, then the card is open
